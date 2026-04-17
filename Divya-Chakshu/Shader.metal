@@ -1,6 +1,3 @@
-// MARK: - Shaders.metal
-// This file contains the Metal Shading Language (MSL) code for your GPU programs.
-
 #include <metal_stdlib>
 using namespace metal;
 
@@ -14,16 +11,14 @@ struct VertexOut {
     float4 color;
 };
 
-vertex VertexOut vertexShader(VertexIn in [[stage_in]],
-                              uint vertex_id [[vertex_id]])
-{
+vertex VertexOut vertexMain(VertexIn in [[stage_in]],
+                            constant float4x4 &transform [[buffer(1)]]) {
     VertexOut out;
-    out.position = float4(in.position, 1.0);
+    out.position = transform * float4(in.position, 1.0);
     out.color = in.color;
     return out;
 }
 
-fragment float4 fragmentShader(VertexOut in [[stage_in]])
-{
+fragment float4 fragmentMain(VertexOut in [[stage_in]]) {
     return in.color;
 }
